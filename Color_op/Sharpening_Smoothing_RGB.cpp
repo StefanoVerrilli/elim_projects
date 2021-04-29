@@ -5,8 +5,8 @@
 using namespace std;
 using namespace cv;
 
-//Using this function to return smoothing,sharpening with laplance/sobel op on
-//the intensity of the image in HSI base. Then I' ll compare the result of those
+//Using this function to return smoothing/sharpening with laplance/sobel op and Avaraging op
+//on the intensity of the image in HSI base. Then I' ll compare the result of those
 //ops in RGB based measure.
 void RGB2HSV_Smoothing(Mat image,Mat &smoothing,Mat &sharp_laplance,Mat &sharp_sobel,int dim);
 
