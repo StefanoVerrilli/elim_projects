@@ -5,13 +5,15 @@ using namespace std;
 using namespace cv;
 
 //What you will find in this header file:
-void Convolution(Mat img,Mat filter,Mat &return_image);
+void Corr_Conv(Mat img,Mat filter,Mat &return_image,int type);
 void Avaraging(Mat image,Mat &output,int dim);
 void Laplanceiano(Mat image,Mat &output,int isotropy,int ddepth);
 void Sobel(Mat img,Mat &output,int weightX,int weighty);
 void Mine_magnitude(Mat img_g_x,Mat img_g_y,Mat &magnitude);
 
-void Convolution(Mat img,Mat filter,Mat &return_image){
+void Corr_Conv(Mat img,Mat filter,Mat &return_image,int type){
+  if(type==1)
+    rotate(filter,filter,ROTATE_180);
   int pad=filter.rows/2;
   Mat padded_img;
   Mat output(img.rows,img.cols,filter.type());
@@ -36,7 +38,7 @@ void Convolution(Mat img,Mat filter,Mat &return_image){
 void Avaraging(Mat image,Mat &output,int dim){
     Mat Corr_Mean_filter=Mat::ones(dim,dim,CV_32F)/(float) (dim*dim);
     Mat imageCorrelation;
-    Convolution(image,Corr_Mean_filter,imageCorrelation);
+    Corr_Conv(image,Corr_Mean_filter,imageCorrelation,0);
     normalize(imageCorrelation,output,0,255,NORM_MINMAX,CV_8UC1);
 }
 
@@ -56,11 +58,11 @@ void Laplanceiano(Mat image,Mat &output,int isotropy,int ddepth){
       cout<<"Error: Please specify the isotropy of the filter"<<endl;
       exit(0);
   }
-    Mat convolution_result;
-    Convolution(image,filter,convolution_result);
+    Mat Corr_Convn_result;
+    Corr_Conv(image,filter,Corr_Convn_result,0);
     Mat temp_output;
-    normalize(convolution_result,convolution_result,0,255,NORM_MINMAX,ddepth);
-    output=convolution_result;
+    normalize(Corr_Convn_result,Corr_Convn_result,0,255,NORM_MINMAX,ddepth);
+    output=Corr_Convn_result;
 }
 
 
@@ -73,8 +75,8 @@ void Sobel(Mat img,Mat &output,int weightX,int weighty,int ddepth){
   float data_g_y[3][3]={{-1,0,1},{-2,0,2},{-1,0,1}};
   Mat g_y = Mat(kernel_dims,kernel_dims,CV_32F,data_g_y)*weighty;
   Mat applied_g_x,applied_g_y;
-  Convolution(img,g_x,applied_g_x);
-  Convolution(img,g_y,applied_g_y);
+  Corr_Conv(img,g_x,applied_g_x,0);
+  Corr_Conv(img,g_y,applied_g_y,0);
   Mat magnitude;
   Mine_magnitude(applied_g_x,applied_g_y,magnitude);
   magnitude.copyTo(output);
