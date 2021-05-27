@@ -17,11 +17,11 @@ if(image.empty()){
 	exit(0);
 }
 Mat image_gauss;
-GaussianBlur(image,image_gauss,Size(5,5),0,0);
+GaussianBlur(image,image_gauss,Size(7,7),0,0);
 
 //Applying Canny op to find edges in the (blurred) original image to identify the lines
 Mat Canny_image;
-Canny(image_gauss,Canny_image,90,160,3);
+Canny(image_gauss,Canny_image,100,130,3);
 
 namedWindow("Canny op applyed",WINDOW_AUTOSIZE);
 imshow("Canny op applyed",Canny_image);
@@ -44,10 +44,10 @@ for(int x=0;x<Canny_image.rows;x++){
 
 for(int r=0;r<votes.rows;r++){
 	for(int t=0;t<votes.cols;t++){
-		if(votes.at<uchar>(r,t)>=100){
-		theta =(t-90)*CV_PI/180;
-		int x = (r-dist)*cos(theta);
-		int y = (r-dist)*sin(theta);
+		if(votes.at<uchar>(r,t)>=50){
+		theta = (t-90)*CV_PI/180;
+		int x = (r - dist)*cos(theta);
+		int y = (r - dist)*sin(theta);
 		double sin_t = sin(theta);
 		double cos_t = cos(theta);
 		Point pt1(cvRound(x + dist*(-sin_t)),cvRound(y + dist*cos_t));
